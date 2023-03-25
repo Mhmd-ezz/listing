@@ -1,13 +1,6 @@
 
 <script setup>
-import {Link, usePage} from "@inertiajs/vue3";
-import {computed} from "vue";
-
-const page = usePage();
-
-const user = computed(
-    () => page.props.user,
-)
+import {Link} from "@inertiajs/vue3";
 </script>
 
 <template>
@@ -20,8 +13,8 @@ const user = computed(
         <div class="text-xl text-indigo-600 dark:text-indigo-300 font-bold text-center">
           <Link :href="route('listing.index')">Laravel with Inertia</Link>
         </div>
-        <div v-if="user" class="flex items-center gap-4">
-          <div class="text-gray-400">{{user.name}}</div>
+        <div v-if="$attrs.user" class="flex items-center gap-4">
+          <div class="text-gray-400">{{$attrs.user.name}}</div>
           <Link :href="route('listing.create')" class="btn-primary">+ New Listing</Link>
           <div>
             <Link :href="route('logout')" method="DELETE" as="button">Logout</Link>

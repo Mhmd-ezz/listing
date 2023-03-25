@@ -17,10 +17,19 @@ class ListingController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
         $this->authorizeResource(Listing::class, 'listing');
     }
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $filters = $request->only([
+            'priceFrom', 'priceTo', 'beds', 'baths', 'areaFrom', 'areaTo'
+        ]);
         return Inertia::render('Listing/Index', [
-            'listings' => ListingResource::collection(Listing::latest()->paginate(20))
+            'filters' => $filters,
+            'listings' => ListingResource::collection(
+                Listing::latest()
+                    ->filter($filters)
+                    ->paginate(10)
+                    ->withQueryString()
+            )
         ]);
     }
 

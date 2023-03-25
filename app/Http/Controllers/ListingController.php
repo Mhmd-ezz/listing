@@ -5,21 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ListingResource;
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 
 class ListingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+        $this->authorizeResource(Listing::class, 'listing');
+    }
     public function index(): Response
     {
         return Inertia::render('Listing/Index', [
-            'listings' => ListingResource::collection(Listing::latest()->paginate(10))
+            'listings' => ListingResource::collection(Listing::latest()->paginate(20))
         ]);
     }
 
     public function show(Listing $listing): Response
     {
+//        if (Auth::user()->cannot('view', $listing)) {
+//            abort(403);
+//        }
+        $this->authorize('view', $listing);
         return Inertia::render('Listing/Show', [
             'listing' => ListingResource::make($listing)
         ]);
@@ -32,7 +42,7 @@ class ListingController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Listing::create(
+        $request->user()->listings()->create(
             $request->validate([
                 'beds' => 'required|numeric|min:1',
                 'baths' => 'required|numeric|min:1',

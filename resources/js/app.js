@@ -24,7 +24,7 @@ createInertiaApp({
   },
   progress: {
     color: '#b3123e',
-    showSpinner: false,
+    showSpinner: true,
     // //The delay after which the progress bar will appear
     // during navigation, in milliseconds.
     delay: 100,

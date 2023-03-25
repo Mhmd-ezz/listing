@@ -37,7 +37,6 @@ class AuthController extends Controller
 
     public function destroy(Request $request)
     {
-        return 'done';
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
